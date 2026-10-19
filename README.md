@@ -98,6 +98,8 @@ dsh plugin --profile web add @yushui/dsh-learning-mode
 
 教学规则位于 `prompt.js`。每次只教一个完整小节，保留真实动手与等待作答的环节，不伪造成绩；要求模型先讲"观察什么、操作什么"，再给组件。滑块与本地判题由 GenUI 完成，需要模型补讲时才使用 action。
 
+**兜底**：如果用户说看不到组件、按钮点不了，或者只看到一段代码/JSON，提示词要求模型从下一条回复起改用文字、列表和表格把同一份内容讲完，并且不再输出围栏。所以在没有渲染器的环境里，教学不会断在半截 JSON 上。
+
 ## 开发
 
 无运行时 npm 依赖的原生 JavaScript 插件：`index.js` 是宿主入口（注册 `/learn` 命令与 system-prompt 段落），`client.js` 是宿主 ModuleLoader 直接可用的浏览器包，不需要额外转译。使用 `conversation.input.left`、`remote.commands`、`systemPrompt` 接口；客户端不 require GenUI 的任何模块，因此 `dsh.client.inject` 只列宿主包，dsh-ui 的渲染完全由 GenUI 自己的围栏渲染器接管。

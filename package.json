@@ -1,6 +1,6 @@
 {
   "name": "@yushui/dsh-learning-mode",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Learning-mode toggle in the DSH input toolbar: injects a guided teaching prompt (introduce, learn, test, correct) and renders graded quizzes through GenUI (requires the @changfenhuang/dsh-genui plugin). · 输入框工具栏的学习模式开关：为当前会话注入教学提示词，按「引入—学习—测试—纠错」引导，并用 GenUI 生成可判分的互动测验。",
   "type": "module",
   "main": "./index.js",
