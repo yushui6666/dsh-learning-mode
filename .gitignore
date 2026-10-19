@@ -1,5 +1,6 @@
 node_modules/
 *.tgz
 artifacts/
+docs/assets/render-*.html
 pnpm-lock.yaml
 .DS_Store

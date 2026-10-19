@@ -1,8 +1,42 @@
 # 学习模式 · dsh-learning-mode
 
-输入框工具栏左侧的「学习模式」开关：打开后为**当前会话**注入一套固定教学提示词——实际问题引入 → 分知识点讲解/交互探索 → 测试 → 反馈与纠错，测验与滑块由 GenUI 渲染成可点的组件，本地判分不额外调用模型。
+输入框工具栏的「学习模式」开关：打开后为**当前会话**注入一套固定教学提示词——问题引入 → 讲解与交互探索 → 测试 → 反馈纠错。测验、参数滑块、交卷判分都由 GenUI 直接画在回答里，点选即时出结果，判分不发模型请求。
 
-> Learning Mode for DeepSeek Harness: a toggle next to the input box that injects a teaching prompt into the current session (introduce the idea, teach it, test it, correct it) and renders graded quizzes through GenUI. No course library, no progress storage, no extra pages.
+> Learning Mode for DeepSeek Harness: a toggle next to the input box that injects a teaching prompt into the current session (introduce the idea, teach it, test it, correct it) and renders quizzes, sliders and local grading through GenUI. No course library, no progress storage, no extra pages.
+
+## 长什么样
+
+学习模式本身不画界面。它负责的是"教什么、什么时候停、什么时候反馈"，画面交给 **GenUI** 渲染。
+下面三张不是设计稿，是同一套渲染器实时画出来的真实组件：
+
+**单题测验：点选即判，选错了也有针对该选项的解释**
+
+![单题测验](docs/assets/quiz.png)
+
+**交卷判分：三题一起交，分数、每题对错和解析当场出现（全部在浏览器里算）**
+
+![交卷判分](docs/assets/paper.png)
+
+**参数探索：先猜结论，再拖滑块看曲线怎么变**
+
+![参数探索](docs/assets/plot.png)
+
+开关本身在输入框工具栏左侧，是一个小图标按钮：点亮＝本会话已开启，再点一次关闭。
+
+## 一次完整的学习循环
+
+| 阶段 | 你做什么 | 插件和模型做什么 |
+| --- | --- | --- |
+| 引入 | 说一句想学什么，比如「我想学概率，从条件概率开始」 | 用一个真实问题引出为什么值得学，并说明这轮学完能做到什么 |
+| 学习 | 看解释、跟着预测、拖滑块验证 | 直觉解释 → 具体例子 → 准确术语或公式；只在值得动手的地方安排探索 |
+| 测试 | 点选项、或把几题都选完点「交卷」 | GenUI 本地判分：对错、解析、得分立刻显示，不额外请求模型 |
+| 反馈 | 说哪里没懂，或点「继续学习」「换个例子」 | 针对具体误区换反例重讲，再给一道等价题确认 |
+
+### 哪些交互留在本地，哪些会回到模型
+
+- **纯本地**：判题、交卷打分、拖滑块、展开与切换——浏览器即时完成，不产生请求。
+- **会回传**：带 `action` 的单题测验、带 `groups` 的交卷按钮、以及「换个例子」「再讲一遍」「继续学习」这类按钮，会以 `[genui-action]` 把真实作答与选择送回模型，模型据此补讲或推进。
+- 分界由内置提示词约束：没有真实提交时，模型不会声称看到了分数或选择。
 
 ## 前置条件：先装 GenUI（必装）
 
@@ -52,7 +86,7 @@ dsh plugin --profile web add @yushui/dsh-learning-mode
 
 ## 使用
 
-打开或新建一个会话，点击输入框下方「学习模式」，确认按钮高亮。输入「我想学概率，先从条件概率开始」等主题即可。关闭后，从下一次模型请求起不再加入这套提示词，历史对话仍保留。
+打开或新建一个会话，点击输入框工具栏的「学习模式」，确认按钮高亮。输入「我想学概率，先从条件概率开始」等主题即可。关闭后，从下一次模型请求起不再加入这套提示词，历史对话仍保留。
 
 学习模式不替代 GenUI，不创建其他网页，不改变模型或权限。
 
@@ -62,7 +96,7 @@ dsh plugin --profile web add @yushui/dsh-learning-mode
 
 ## 内置提示词
 
-教学规则位于 `prompt.js`。每次只教一个完整小节，保留真实动手与等待作答的环节，不伪造成绩。滑块与本地判题由 GenUI 完成，需要模型补讲时才使用 action。
+教学规则位于 `prompt.js`。每次只教一个完整小节，保留真实动手与等待作答的环节，不伪造成绩；要求模型先讲"观察什么、操作什么"，再给组件。滑块与本地判题由 GenUI 完成，需要模型补讲时才使用 action。
 
 ## 开发
 
@@ -75,6 +109,8 @@ npm pack
 ```
 
 高级备用命令：`/learn on`、`/learn off`、`/learn status`。返回 JSON 状态且不启动模型生成；按钮平时不调用它们，只在点击（或点击重试）时执行一次，因此每次都会在会话流留下一条命令记录。
+
+`docs/assets/` 里的截图由 GenUI 的独立渲染器（`standalone-runtime.js`）渲染同一份 `dsh-ui` 规格后截取，与聊天里看到的组件同源。
 
 ## 边界
 
