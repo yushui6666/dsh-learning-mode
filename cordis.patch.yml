@@ -1,0 +1,7 @@
+# dsh-learning-mode bundle for DeepSeek Harness (dsh).
+# The plugin row resolves the package by name through the profile's node_modules;
+# the server half registers the /learn command and the teaching system-prompt section,
+# the client half renders the toggle in conversation.input.left.
+- insert:
+    - id: learning-mode
+      name: '@yushui/dsh-learning-mode'

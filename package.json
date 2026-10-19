@@ -1,0 +1,59 @@
+{
+  "name": "@yushui/dsh-learning-mode",
+  "version": "0.1.1",
+  "description": "Learning-mode toggle in the DSH input toolbar: injects a guided teaching prompt (introduce, learn, test, correct) and renders graded quizzes through GenUI. · 输入框工具栏的学习模式开关：为当前会话注入教学提示词，按「引入—学习—测试—纠错」引导，并用 GenUI 生成可判分的互动测验。",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "prompt.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "learning-mode",
+    "tutor",
+    "teaching",
+    "genui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yushui6666/dsh-learning-mode.git"
+  },
+  "homepage": "https://github.com/yushui6666/dsh-learning-mode#readme",
+  "bugs": {
+    "url": "https://github.com/yushui6666/dsh-learning-mode/issues"
+  },
+  "author": "yushui6666",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-session"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "build": "node --check index.js && node --check prompt.js && node --check client.js",
+    "prepack": "node --check index.js && node --check prompt.js && node --check client.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}
