@@ -35,11 +35,20 @@ dsh plugin --profile web add @changfenhuang/dsh-genui
 
 ## 安装
 
-插件市场里搜「学习模式」即可；或命令行：
+插件市场里搜「学习模式」即可；或命令行一次装齐（两条命令，按顺序执行，各自只装一个插件）：
 
 ```sh
+dsh plugin --profile web add @changfenhuang/dsh-genui
 dsh plugin --profile web add @yushui/dsh-learning-mode
 ```
+
+第一条是渲染器（见上节），第二条才是本插件。已经装过 GenUI 的跳过第一条即可。
+
+### 这两条命令是什么，不是什么
+
+- 是宿主自带的插件管理器：等价于在市场里点两次「安装」，装到本机 profile 的 `node_modules` 并登记进 `dsh.profile.bundles`。
+- 不是 `curl … | sh` 之类的远程脚本：命令不下载执行任何安装脚本，包本身也没有 `postinstall` / `preinstall` / `prepare`，只有 `prepack`（`node --check` 语法检查，只在打包时跑）。`pnpm` 默认也不执行依赖的构建脚本。
+- 想撤销：在插件市场里点卸载（推荐，会同时清掉 `dsh.profile.bundles` 里的登记）；也可以用 `dsh plugin --profile web remove <包名>`，若那行登记还在，手动删掉即可。
 
 ## 使用
 
@@ -70,6 +79,16 @@ npm pack
 ## 边界
 
 本地判卷不自动等于模型收到错题；提示词要求模型在收到真实提交或用户说明后再反馈。教学质量和组件选择仍依赖所用模型与 GenUI 能力，本插件不保证任意模型都能正确讲解任意学科。
+
+## 安全边界
+
+代码只用宿主公开接口：服务端注册 `/learn` 命令与一段 system prompt，客户端只做一次 `remote.commands.execute(sessionId, "/learn on|off")` 和 `sessionStorage` 读写。
+
+- 不联网：没有任何 `fetch` / `http` 请求，不连第三方服务。
+- 不读写用户文件：服务端与客户端都不 import `fs`（`test/` 里的测试读自身源码除外）。
+- 不执行子进程、不 `eval`，仓库里没有二进制和压缩代码。
+- 不收集数据：没有遥测、没有上报，状态只存在当前窗口的 `sessionStorage`。
+- 安装期不跑脚本：见上方「这两条命令是什么，不是什么」。
 
 ## 许可
 
