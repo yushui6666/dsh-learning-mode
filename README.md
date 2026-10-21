@@ -69,14 +69,18 @@ dsh plugin --profile web add @changfenhuang/dsh-genui
 
 ## 安装
 
-插件市场里搜「学习模式」即可；或命令行一次装齐（两条命令，按顺序执行，各自只装一个插件）：
+在插件市场里搜「学习模式」（作者 yushui6666）点安装即可；市场是从本仓库的 GitHub 源装的。命令行等价操作：
 
 ```sh
-dsh plugin --profile web add @changfenhuang/dsh-genui
-dsh plugin --profile web add @yushui/dsh-learning-mode
+dsh plugin --profile web add @changfenhuang/dsh-genui                          # 渲染器（必装，见上节）
+dsh plugin --profile web add github:yushui6666/dsh-learning-mode               # 本插件
 ```
 
-第一条是渲染器（见上节），第二条才是本插件。已经装过 GenUI 的跳过第一条即可。
+第一条是 GenUI 渲染器，第二条才是本插件；已经装过 GenUI 的跳过第一条。
+
+`github:yushui6666/dsh-learning-mode` 是 pnpm 的 GitHub 源写法：直接取本仓库当前默认分支安装，**不经过 npm 注册表**。本插件的 npm 包尚未发布，所以 `@yushui/dsh-learning-mode` 这类 npm 形式的安装命令现在会 404，请不要用。
+
+也可以在插件管理器的安装框里直接粘贴 `github:yushui6666/dsh-learning-mode`，效果相同。
 
 ### 这两条命令是什么，不是什么
 
