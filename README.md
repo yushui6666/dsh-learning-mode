@@ -11,15 +11,15 @@
 
 **单题测验：点选即判，选错了也有针对该选项的解释**
 
-![单题测验](docs/assets/quiz.png)
+![单题测验](https://raw.githubusercontent.com/yushui6666/dsh-learning-mode/main/docs/assets/quiz.png)
 
 **交卷判分：三题一起交，分数、每题对错和解析当场出现（全部在浏览器里算）**
 
-![交卷判分](docs/assets/paper.png)
+![交卷判分](https://raw.githubusercontent.com/yushui6666/dsh-learning-mode/main/docs/assets/paper.png)
 
 **参数探索：先猜结论，再拖滑块看曲线怎么变**
 
-![参数探索](docs/assets/plot.png)
+![参数探索](https://raw.githubusercontent.com/yushui6666/dsh-learning-mode/main/docs/assets/plot.png)
 
 开关本身在输入框工具栏左侧，是一个小图标按钮：点亮＝本会话已开启，再点一次关闭。
 

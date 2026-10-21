@@ -3,11 +3,16 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
-let client;
+let client, registrationId;
 vm.runInNewContext(readFileSync(new URL('../client.js', import.meta.url), 'utf8'), {
-  window: { __ModuleLoader__: { load({ factory }) { client = factory(() => ({})); } } },
+  window: { __ModuleLoader__: { load({ id, factory }) { registrationId = id; client = factory(() => ({})); } } },
 });
 const response = (value) => ({ ok: true, value: { result: { kind: 'success', text: JSON.stringify(value) } } });
+
+test('client registers under its package name so the host can find its factory', () => {
+  const metadata = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.equal(registrationId, metadata.name);
+});
 
 test('client reads host-confirmed on/off rather than guessing from a click', () => {
   assert.equal(client.readState(response({ enabled: true })), true);

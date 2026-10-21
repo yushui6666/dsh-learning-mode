@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-learning-mode',
+  id: '@yushui/dsh-learning-mode',
   factory(require) {
     const React = require('react');
 
